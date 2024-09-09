@@ -6,9 +6,8 @@ print('Hello OpenCV', cv2.__version__)
 
 # image 준비
 # img Dtype: numpy.ndarray
-img_gray = cv2.imread('lenna.bmp', cv2.IMREAD_GRAYSCALE)
-img_bgr = cv2.imread('lenna.bmp')
-
+img_gray = cv2.imread('data/Lena.bmp', cv2.IMREAD_GRAYSCALE)
+img_bgr = cv2.imread('data/Lena.bmp')
 
 # 파일을 못찾아서 이미지를 못 읽어온 경우
 # 프로그램 종료

@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-src1 = cv2.imread('C:/Users/한명수/Documents/Github/03_openCV/data2/airplane.bmp')
-src2 = cv2.imread('C:/Users/한명수/Documents/Github/03_openCV/data2/field.bmp')
+src1 = cv2.imread('pic/airplane.bmp')
+src2 = cv2.imread('pic/field.bmp')
 
 
 alpha = 0.2

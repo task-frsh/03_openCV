@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 ### Load_IMAGE
 ################################################
-src = cv2.imread('00_misson/20240906/01.png')
+src = cv2.imread('mission/01.png')
 
 if src is None:
     sys.exit('image load failed')
@@ -16,7 +16,7 @@ if src is None:
 ### TRACK_BAR
 ################################################
 
-# HSV 색 공간으로 변환
+# # HSV 색 공간으로 변환
 hsv_src = cv2.cvtColor(src, cv2.COLOR_BGR2HSV)
 
 # # 트랙바 이벤트 처리 함수
@@ -72,7 +72,7 @@ mask2 = cv2.inRange(hsv_src, lower2, upper2)
 exclude_mask = cv2.bitwise_or(mask1, mask2)
 
 # 제외 영역을 제외한 나머지 영역 마스크 생성
-mask = cv2.bitwise_not(exclude_mask)
+mask = cv2.bitwise_not(exclude_mask) # 성당
 
 
 ### FILTER 1 (Non-Local Means Denoising)
@@ -81,15 +81,15 @@ mask = cv2.bitwise_not(exclude_mask)
 # 1. Non-Local Means Denoising 적용 (컬러 이미지)
 dn1 = cv2.fastNlMeansDenoisingColored(src, None, 10, 10, 7, 21)
 
-# # 2. Gaussian Blur 적용
-# denoised_gaussian = cv2.GaussianBlur(src, (5, 5), 0)
-# # 3. Median Filter 적용
-# denoised_median = cv2.medianBlur(src, 5)
+# 2. Gaussian Blur 적용
+denoised_gaussian = cv2.GaussianBlur(src, (5, 5), 0)
+# 3. Median Filter 적용
+denoised_median = cv2.medianBlur(src, 5)
 
 # 마스크를 이용하여 노이즈 제거된 이미지 합성
 dn1_img = np.where(mask[:, :, np.newaxis] == 255, dn1, src)
-# denoised_gaussian = np.where(mask[:, :, np.newaxis] == 255, denoised_gaussian, src)
-# denoised_median = np.where(mask[:, :, np.newaxis] == 255, denoised_median, src)
+denoised_gaussian = np.where(mask[:, :, np.newaxis] == 255, denoised_gaussian, src)
+denoised_median = np.where(mask[:, :, np.newaxis] == 255, denoised_median, src)
 
 
 
@@ -138,8 +138,8 @@ cv2.imshow('Original', src)
 # cv2.imshow('blur', blur)
 # cv2.imshow('gaussian', gaussian)
 # cv2.imshow('median', median)
-# cv2.imshow("d_Gaussian", denoised_gaussian)
-# cv2.imshow("d_Median", denoised_median)
+cv2.imshow("d_Gaussian", denoised_gaussian)
+cv2.imshow("d_Median", denoised_median)
 
 
 # cv2.imshow("1. d_NLMeans", dn1_img)
@@ -147,7 +147,7 @@ cv2.imshow('Original', src)
 # cv2.imshow("3. d_NLMeans", dn2)
 # cv2.imshow("4. synthesis", synthesis)
 # cv2.imshow("5. blured", blurred_img)
-cv2.imshow("6. finished", contrast_img)
+# cv2.imshow("6. finished", contrast_img)
 
 ### 이미지 저장
 ################################################
