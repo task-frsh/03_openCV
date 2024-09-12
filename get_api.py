@@ -1,9 +1,9 @@
 import requests
 import pandas as pd
+import ms_api
 
 # API Key
-apikey = 'jLUlozKiUVHszxwTnnHRjnn0pAeC8NF5dr06kS1hIwGyPFoq6OuwxSHXVYp1OBFta3InpZwkEEbP0NCQMLltLg==' 
-
+apikey = ms_api.pd_apikey
 # API 엔드포인트
 url = 'https://apis.data.go.kr/1741000/RegistrationPopulationByRegion/getRegistrationPopulationByRegion?ServiceKey=jLUlozKiUVHszxwTnnHRjnn0pAeC8NF5dr06kS1hIwGyPFoq6OuwxSHXVYp1OBFta3InpZwkEEbP0NCQMLltLg%3D%3D&pageNo=1&numOfRows=100' 
 
