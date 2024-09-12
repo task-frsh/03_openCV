@@ -1,6 +1,5 @@
 
 
-
 # 1. 배경 : 흰색 책상, 우드 테이블
 # 2. 데이터 증식 조건   # 데이터 특성마다 다름
 #   2.0 스마트폰으로 사진 촬영 후 이미지 크기를 줄여주자. (이미지크기 224 x 224)
@@ -38,15 +37,93 @@ from glob import glob
 
 
 ##### 3. 이미지 불러오기
-dataPath = os.path.join(os.getcwd(), 'DataAug')     # 내가 이 폴더를 어디에 옮겨도 경로를 가져올 수 있다
-dataOrg = os.path.join(dataPath, 'org')
-fileNames = glob(os.path.join(dataOrg, '*.jpg'))    # 
-testFile = fileNames[0]
-# print(dataPath)
-# print(dataOrg)
-# print(fileNames)
-print(testFile)
+# 원본이 될 파일을 만들고 불러온다
+
+
+fileNames = []
+testFile = None
+
+## 파일 불러오기
+
+def loadFile(): 
+    dataPath = os.path.join(os.getcwd(), 'DataAug')     # 내가 이 폴더를 어디에 옮겨도 경로를 가져올 수 있다
+    dataOrg = os.path.join(dataPath, 'org')
+    fileNames = glob(os.path.join(dataOrg, '*.jpg'))
+    testFile = fileNames[0] 
+    # return fileNames
+    # print(dataPath)
+    # print(dataOrg)
+    # print(fileNames)
+    print(testFile)
+    return testFile
+
+
+##  불러오는 이미지 crop (1:1 ratio)
+# 가운데를 중심으로 나머지를 다 잘라낸다
+def crop_image_center(img):
+    h, w = img.shape[:2]    # 이미지 높이,너비,채널수 튜플에서 h,w만 가져옴
+    min_side = min(h,w)     # 작은 사이즈를 min_side에 담음 > 작은거를 기준으로 정사각형 만듦
+    start_x = (w - min_side) // 2 # 중앙 기준. 상하 여백 계산
+    start_y = (h - min_side) // 2
+    print(h, w)
+    print(start_x)
+    print(start_y)
+    return img[start_y: start_y+min_side, start_x: start_x+min_side]
+ 
+
+## 자르고 저장
+# DataAug/ORG 이미지 잘라서 > DataAug 폴더에 저장
+def load_crop(dataPath):
+    dataOrg = os.path.join(dataPath, 'ORG')
+    fileNames = glob(os.path.join(dataOrg, '*.jpg'))
+
+    for fileName in fileNames:
+        img = cv2.imread(fileName)
+        if img is None:
+            print(f"이미지 불러오기 실패: {fileName}")
+            continue
+
+        # resize
+        resized_img = cv2.resize(img,(224,224), interpolation=cv2.INTER_LANCZOS4)
+
+        cropedImg = crop_image_center(img)
+
+        # 파일명 기본이름(file_base), 확장자(file_ext) 분리
+        file_base, file_ext = os.path.splitext(os.path.basename(fileName))
+        newFileName = f"{file_base}_1_1ratio{file_ext}"
+        newFilePath = os.path.join(dataPath, newFileName)
+
+        # 이미지 저장
+        cv2.imwrite(newFilePath, cropedImg)
+        print(f"{newFileName} 저장 완료!")
 
 
 # 4. 함수들을 만든다.
 
+# resize 안깨지게 하려면, interpolation 신경써야함
+
+
+
+# 화면 출력
+
+def main():
+    dataPath = os.path.join(os.getcwd(), 'DataAug')
+    load_crop(dataPath)
+
+    testFile = loadFile()
+    img = cv2.imread(testFile)
+
+    if img is not None:
+        croppedImg = crop_image_center(img)
+
+        # 파일 불러오기
+        img = cv2.imread(testFile)
+        
+        cv2.imshow('ORIGINAL', img)
+        cv2.imshow('CROPPED', croppedImg)
+
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+        main()
