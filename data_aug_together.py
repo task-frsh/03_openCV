@@ -20,7 +20,7 @@ dataOrg = os.path.join(dataPath, 'ORG')
 
 
 # 전역변수 #DEBUG, dsize
-DEBUG = True
+DEBUG = False
 dsize = (224,224)
 
 
@@ -50,7 +50,7 @@ def readImg(image_path):
 
 # input  : 원본 파일명
 # output : 새로생성될 파일명
-def getFileName(imgNamem, func):
+def getFileName(imgName, func):
 
     if func==funcNum.resize:
         # 경로를 제외한 파일명만 오려낸다
@@ -61,8 +61,9 @@ def getFileName(imgNamem, func):
         resizeName = baseNameSplit + '_resize_' + str(dsize[0]) + '.jpg'
         return resizeName
 
-#1 resize
 
+
+#1 resize
 
 def resize(img=None, dsize=dsize, imgName=None):
     if img is None:
@@ -70,9 +71,11 @@ def resize(img=None, dsize=dsize, imgName=None):
 
     dst = cv2.resize(img, dsize, interpolation=cv2.INTER_AREA)
     resizeName = getFileName(imgName, funcNum.resize)
-    print(resizeName)
+    cv2.imwrite(resizeName, dst)
+    # print(resizeName)
 
     # 파일 저장
+    return dst
 
 classList = ['keyboard1', 'keyboard2', 'keyboard3']
 
